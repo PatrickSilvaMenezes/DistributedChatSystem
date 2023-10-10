@@ -1,0 +1,1 @@
+<font color="blue">patrick</font> says: ola mesquita<br><font color="red">mesquita</font> says: ola patrick<br>
