@@ -28,7 +28,7 @@ public class RmiImplementationDesktop extends UnicastRemoteObject implements Rmi
     public boolean storeMsg(String msg) throws RemoteException {
         FileWriter writer;
         try {
-            writer = new FileWriter("C:/8_periodo/SD/Middleware/src/main/java/middleware/Repository/desktop_chat.txt", true);
+            writer = new FileWriter("C:/8_periodo/SD/ChatSystem/Middleware/src/main/java/middleware/Repository/desktop_chat.txt", true);
             writer.write(msg);
             writer.close();
             
@@ -45,7 +45,7 @@ public class RmiImplementationDesktop extends UnicastRemoteObject implements Rmi
         FileReader reader;
         String msg = "";
         try {
-            reader = new FileReader("C:/8_periodo/SD/Middleware/src/main/java/middleware/Repository/desktop_chat.txt");
+            reader = new FileReader("C:/8_periodo/SD/ChatSystem/Middleware/src/main/java/middleware/Repository/desktop_chat.txt");
             BufferedReader bufferReader = new BufferedReader(reader);
            
             while(bufferReader.ready()){

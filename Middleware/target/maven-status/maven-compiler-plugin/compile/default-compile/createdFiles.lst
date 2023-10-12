@@ -4,4 +4,5 @@ middleware\ServerWeb.class
 middleware\RmiInterfaceDesktop.class
 middleware\Utils.class
 middleware\ServerDesktop.class
+middleware\EmojiUtils.class
 middleware\RmiImplementationDesktop.class

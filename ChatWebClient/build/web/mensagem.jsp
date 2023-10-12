@@ -4,9 +4,15 @@
     Author     : patri
 --%>
 <%@page import = "java.rmi.Naming"%>
+<%@page import = "middleware.EmojiUtils"%>
 <%@page import = "middleware.RmiInterfaceWeb"%>
+<%@page import = "middleware.RmiInterfaceDesktop"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import = "java.io.FileWriter" %>
+
+
+
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -20,17 +26,28 @@
             <input type="text" name="txtmsg" maxlength="200" size="210"> <br>
             <input type="submit" name="btnenviar" value="enviar">
         </form>
-        
-        <%
-           try{
-             RmiInterfaceWeb objRmi = (RmiInterfaceWeb)Naming.lookup("rmi://localhost:6666/ChatServerWeb");
-             String msg = "<img src=\" " + session.getAttribute("radavatar") + "\" widht=\"30\" height=\"30\" +><font color=\""+session.getAttribute("radcor")+"\">" + session.getAttribute("txtnick") + "</font> says: " + request.getParameter("txtmsg") + "<br>";
-             objRmi.storeMsg(msg);
-           }
-           catch(Exception e){
-                out.print("Erro: " + e.getMessage());
-           }
-        %>
+
+     <%
+        try {
+            RmiInterfaceWeb objRmiWeb = (RmiInterfaceWeb) Naming.lookup("rmi://localhost:6666/ChatServerWeb");
+            RmiInterfaceDesktop objRmiDesktop = (RmiInterfaceDesktop) Naming.lookup("rmi://localhost:7777/ChatServerDesktop");
+            String msgText = request.getParameter("txtmsg");
+
+            String msgWeb = "<img src=\"" + session.getAttribute("radavatar") + "\" width=\"30\" height=\"30\"><font color=\"" + session.getAttribute("radcor") + "\">" + session.getAttribute("txtnick") + "</font> says: " + EmojiUtils.transformToEmoji(msgText) + "<br>";
+
+            String msgDesktop = "<font color=\"" + session.getAttribute("radcor") + "\">" + session.getAttribute("txtnick") + "</font> says: " + msgText + "<br>";
+
+            if (msgText.contains(":-)") || msgText.contains(":-(") || msgText.contains(":-/")) {
+                msgDesktop = "<font color=\"" + session.getAttribute("radcor") + "\">" + session.getAttribute("txtnick") + "</font> says: " + msgText.replaceAll(":-\\)|:-\\(|:-/", "") + "<br>";
+            }
+
+            objRmiWeb.storeMsg(msgWeb);
+            objRmiDesktop.storeMsg(msgDesktop);
+        } catch (Exception e) {
+            out.print("Erro: " + e.getMessage());
+        }
+%>
+
 
     </body>
 </html>

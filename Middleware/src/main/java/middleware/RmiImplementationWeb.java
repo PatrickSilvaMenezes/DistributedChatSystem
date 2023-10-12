@@ -28,7 +28,7 @@ public class RmiImplementationWeb extends UnicastRemoteObject implements RmiInte
     public boolean storeMsg(String msg) throws RemoteException {
         FileWriter writerWeb;
         try {
-            writerWeb = new FileWriter("C:/8_periodo/SD/Middleware/src/main/java/middleware/Repository/web_chat.txt", true);
+            writerWeb = new FileWriter("C:/8_periodo/SD/ChatSystem/Middleware/src/main/java/middleware/Repository/web_chat.txt", true);
             writerWeb.write(msg);
            
             writerWeb.close();
@@ -46,7 +46,7 @@ public class RmiImplementationWeb extends UnicastRemoteObject implements RmiInte
         FileReader reader;
         String msg = "";
         try {
-            reader = new FileReader("C:/8_periodo/SD/Middleware/src/main/java/middleware/Repository/web_chat.txt");
+            reader = new FileReader("C:/8_periodo/SD/ChatSystem/Middleware/src/main/java/middleware/Repository/web_chat.txt");
             BufferedReader bufferReader = new BufferedReader(reader);
 
             while (bufferReader.ready()) {

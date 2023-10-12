@@ -14,7 +14,7 @@ public class ServerDesktop {
         try{
             this.reg = LocateRegistry.createRegistry(7777);
             RmiInterfaceDesktop objRmi = new RmiImplementationDesktop();
-            reg.rebind("ChatServer", objRmi);
+            reg.rebind("ChatServerDesktop", objRmi);
         }
         catch(RemoteException e){
             JOptionPane.showMessageDialog(null, "Server Error: "+ e.getMessage());

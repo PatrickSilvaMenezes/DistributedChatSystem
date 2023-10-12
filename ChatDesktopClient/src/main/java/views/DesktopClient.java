@@ -7,8 +7,10 @@ package views;
 import static java.lang.System.out;
 import java.rmi.Naming;
 import javax.swing.JOptionPane;
+import middleware.EmojiUtils;
 import middleware.Utils;
 import middleware.RmiInterfaceDesktop;
+import middleware.RmiInterfaceWeb;
 
 /**
  *
@@ -27,7 +29,7 @@ public class DesktopClient extends javax.swing.JFrame {
             @Override
             public void run() {
                 try {
-                    RmiInterfaceDesktop objRmi = (RmiInterfaceDesktop) Naming.lookup("rmi://localhost:7777/ChatServer");
+                    RmiInterfaceDesktop objRmi = (RmiInterfaceDesktop) Naming.lookup("rmi://localhost:7777/ChatServerDesktop");
                     while (true) {
 
                         edtConversation.setText(objRmi.recoverMsgs());
@@ -118,10 +120,16 @@ public class DesktopClient extends javax.swing.JFrame {
     private void btnSendMessageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSendMessageActionPerformed
         // TODO add your handling code here:
         try {
-            RmiInterfaceDesktop objRmi = (RmiInterfaceDesktop) Naming.lookup("rmi://localhost:7777/ChatServer");
+            RmiInterfaceDesktop objRmiDesktop = (RmiInterfaceDesktop) Naming.lookup("rmi://localhost:7777/ChatServerDesktop");
+            RmiInterfaceWeb objRmiWeb =  (RmiInterfaceWeb) Naming.lookup("rmi://localhost:6666/ChatServerWeb");
+            
+            String msgDesktop = "<font color=\"" + Utils.getColor() + "\">" + Utils.getNickname() + "</font> says: " + txtMessage.getText().replaceAll(":-\\)|:-\\(|:-/", "") + "<br>";
+            String msgWeb = "<img src=\"imagens/default_avatar.png\" width=\"30\" height=\"30\"><font color=\"" + Utils.getColor() + "\">" + Utils.getNickname() + "</font> says: " + EmojiUtils.transformToEmoji(txtMessage.getText()) + "<br>";
 
-            String msg = "<font color=\"" + Utils.getColor() + "\">" + Utils.getNickname() + "</font> says: " + txtMessage.getText() + "<br>";
-            objRmi.storeMsg(msg);
+            
+            objRmiDesktop.storeMsg(msgDesktop);
+            objRmiWeb.storeMsg(msgWeb);
+            
         } catch (Exception e) {
             System.out.print(e.getMessage());
             JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
