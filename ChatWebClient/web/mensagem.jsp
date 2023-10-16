@@ -27,26 +27,34 @@
             <input type="submit" name="btnenviar" value="enviar">
         </form>
 
-     <%
-        try {
-            RmiInterfaceWeb objRmiWeb = (RmiInterfaceWeb) Naming.lookup("rmi://localhost:6666/ChatServerWeb");
-            RmiInterfaceDesktop objRmiDesktop = (RmiInterfaceDesktop) Naming.lookup("rmi://localhost:7777/ChatServerDesktop");
-            String msgText = request.getParameter("txtmsg");
-
-            String msgWeb = "<img src=\"" + session.getAttribute("radavatar") + "\" width=\"30\" height=\"30\"><font color=\"" + session.getAttribute("radcor") + "\">" + session.getAttribute("txtnick") + "</font> says: " + EmojiUtils.transformToEmoji(msgText) + "<br>";
-
-            String msgDesktop = "<font color=\"" + session.getAttribute("radcor") + "\">" + session.getAttribute("txtnick") + "</font> says: " + msgText + "<br>";
-
-            if (msgText.contains(":-)") || msgText.contains(":-(") || msgText.contains(":-/")) {
-                msgDesktop = "<font color=\"" + session.getAttribute("radcor") + "\">" + session.getAttribute("txtnick") + "</font> says: " + msgText.replaceAll(":-\\)|:-\\(|:-/", "") + "<br>";
-            }
-
-            objRmiWeb.storeMsg(msgWeb);
-            objRmiDesktop.storeMsg(msgDesktop);
-        } catch (Exception e) {
-            out.print("Erro: " + e.getMessage());
+        <%
+   try {
+       String msgText = request.getParameter("txtmsg");
+           // Verifique se um avatar foi escolhido; caso contrário, defina um avatar padrão
+        String avatar = (String) session.getAttribute("radavatar");
+        if (avatar == null || avatar.isEmpty()) {
+            session.setAttribute("radavatar", "imagens/default_avatar.png");
         }
-%>
+
+       if (msgText != null) {
+           RmiInterfaceWeb objRmiWeb = (RmiInterfaceWeb) Naming.lookup("rmi://localhost:6666/ChatServerWeb");
+           RmiInterfaceDesktop objRmiDesktop = (RmiInterfaceDesktop) Naming.lookup("rmi://localhost:7777/ChatServerDesktop");
+
+           String msgWeb = "<img src=\"" + session.getAttribute("radavatar") + "\" width=\"30\" height=\"30\"><font color=\"" + session.getAttribute("radcor") + "\">" + session.getAttribute("txtnick") + "</font> says: " + EmojiUtils.transformToEmoji(msgText) + "<br>";
+
+           String msgDesktop = "<font color=\"" + session.getAttribute("radcor") + "\">" + session.getAttribute("txtnick") + "</font> says: " + msgText + "<br>";
+
+           if (msgText.contains(":-)") || msgText.contains(":-(") || msgText.contains(":-/")) {
+               msgDesktop = "<font color=\"" + session.getAttribute("radcor") + "\">" + session.getAttribute("txtnick") + "</font> says: " + msgText.replaceAll(":-\\)|:-\\(|:-/", "") + "<br>";
+           }
+
+           objRmiWeb.storeMsg(msgWeb);
+           objRmiDesktop.storeMsg(msgDesktop);
+       }
+   } catch (Exception e) {
+       out.print("Erro: " + e.getMessage());
+   }
+        %>
 
 
     </body>
