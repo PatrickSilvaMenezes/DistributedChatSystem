@@ -118,14 +118,12 @@ public class DesktopClient extends javax.swing.JFrame {
     }//GEN-LAST:event_txtMessageActionPerformed
 
     private void btnSendMessageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSendMessageActionPerformed
-        // TODO add your handling code here:
         try {
             RmiInterfaceDesktop objRmiDesktop = (RmiInterfaceDesktop) Naming.lookup("rmi://localhost:7777/ChatServerDesktop");
             RmiInterfaceWeb objRmiWeb =  (RmiInterfaceWeb) Naming.lookup("rmi://localhost:6666/ChatServerWeb");
             
-            String msgDesktop = "<font color=\"" + Utils.getColor() + "\">" + Utils.getNickname() + "</font> says: " + txtMessage.getText().replaceAll(":-\\)|:-\\(|:-/", "") + "<br>";
+            String msgDesktop = "<font color=\"" + Utils.getColor() + "\">" + Utils.getNickname() + "</font> says: " + txtMessage.getText() + "<br>";
             String msgWeb = "<img src=\"imagens/default_avatar.png\" width=\"30\" height=\"30\"><font color=\"" + Utils.getColor() + "\">" + Utils.getNickname() + "</font> says: " + EmojiUtils.transformToEmoji(txtMessage.getText()) + "<br>";
-
             
             objRmiDesktop.storeMsg(msgDesktop);
             objRmiWeb.storeMsg(msgWeb);

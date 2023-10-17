@@ -178,12 +178,7 @@ public class DesktopLogin extends javax.swing.JFrame {
     }//GEN-LAST:event_rbtnGreenActionPerformed
 
     private void rbtnPurpleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbtnPurpleActionPerformed
-        // TODO add your handling code here:
-        if(rbtnPurple.isSelected()){
-            rbtnGreen.setEnabled(false);
-            rbtnBlue.setEnabled(false);
-            rbtnRed.setEnabled(false);
-        }
+
     }//GEN-LAST:event_rbtnPurpleActionPerformed
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed

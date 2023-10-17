@@ -44,10 +44,6 @@
 
            String msgDesktop = "<font color=\"" + session.getAttribute("radcor") + "\">" + session.getAttribute("txtnick") + "</font> says: " + msgText + "<br>";
 
-           if (msgText.contains(":-)") || msgText.contains(":-(") || msgText.contains(":-/")) {
-               msgDesktop = "<font color=\"" + session.getAttribute("radcor") + "\">" + session.getAttribute("txtnick") + "</font> says: " + msgText.replaceAll(":-\\)|:-\\(|:-/", "") + "<br>";
-           }
-
            objRmiWeb.storeMsg(msgWeb);
            objRmiDesktop.storeMsg(msgDesktop);
        }
