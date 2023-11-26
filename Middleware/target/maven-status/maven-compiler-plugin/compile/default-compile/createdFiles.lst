@@ -1,7 +1,11 @@
 middleware\RmiInterfaceWeb.class
 middleware\RmiImplementationWeb.class
 middleware\ServerWeb.class
+middleware\UdpServer$1.class
 middleware\RmiInterfaceDesktop.class
+middleware\UdpClient.class
+UdpClient.class
+middleware\UdpServer.class
 middleware\Utils.class
 middleware\ServerDesktop.class
 middleware\EmojiUtils.class

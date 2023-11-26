@@ -10,6 +10,7 @@ views\DesktopLogin$3.class
 views\DesktopClient.class
 views\ControlPanel$1.class
 views\DesktopClient$4.class
+views\DesktopClient$5.class
 views\DesktopLogin$5.class
 views\DesktopLogin.class
 views\DesktopLogin$6.class

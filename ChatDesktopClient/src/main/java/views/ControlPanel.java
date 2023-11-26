@@ -4,6 +4,11 @@
  */
 package views;
 
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.util.Random;
+import javax.swing.JOptionPane;
 import middleware.ServerDesktop;
 import middleware.ServerWeb;
 
@@ -12,7 +17,7 @@ import middleware.ServerWeb;
  * @author patri
  */
 public class ControlPanel extends javax.swing.JFrame {
-
+    Thread threadAd;
     /**
      * Creates new form ControlPanel
      */
@@ -138,6 +143,42 @@ public class ControlPanel extends javax.swing.JFrame {
 
     private void btnAdvertisementActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdvertisementActionPerformed
         // TODO add your handling code here:
+        if (btnAdvertisement.isSelected()) {
+            btnAdvertisement.setText("Turn Off");
+            
+            threadAd = new Thread(() -> {
+                String[] publicidade = {
+                    "C:/8_periodo/SD/ChatSystem/Middleware/src/main/java/middleware/Repository/ads/betano.jpg",
+                    "C:/8_periodo/SD/ChatSystem/Middleware/src/main/java/middleware/Repository/ads/coca.jpg",
+                    "C:/8_periodo/SD/ChatSystem/Middleware/src/main/java/middleware/Repository/ads/isis.jpg",
+                    "C:/8_periodo/SD/ChatSystem/Middleware/src/main/java/middleware/Repository/ads/ifood.jpg",
+                    "C:/8_periodo/SD/ChatSystem/Middleware/src/main/java/middleware/Repository/ads/zedelivery.jpg",
+                    "C:/8_periodo/SD/ChatSystem/Middleware/src/main/java/middleware/Repository/ads/mcdonalds.jpg"
+                };
+                while (true) {
+                    try {
+                        Random generateRandom = new Random();
+                        int random = generateRandom.nextInt(publicidade.length);
+                        byte[] b = publicidade[random].getBytes();
+
+                        InetAddress hostMulticast = InetAddress.getByName("239.0.0.1");
+                        DatagramSocket socketMulticast = new DatagramSocket();
+                        DatagramPacket datagrama = new DatagramPacket(b, b.length, hostMulticast, 3333);
+
+                        socketMulticast.send(datagrama);
+                        socketMulticast.close();
+                        Thread.sleep(3000);
+                    } catch (Exception e) {
+                        JOptionPane.showMessageDialog(null, "Advertisement Error: " + e.getMessage());
+                    }
+                }
+
+            });
+            threadAd.start();
+        } else {
+            threadAd.stop();
+            btnAdvertisement.setText("Turn On");
+        }
     }//GEN-LAST:event_btnAdvertisementActionPerformed
 
     /**

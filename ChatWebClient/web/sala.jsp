@@ -6,6 +6,7 @@
         <title>JSP Page</title>
     </head>
    <body>
+       <iframe src="publicidade.jsp" width="100%" height="400"></iframe>
        <iframe src="topo.jsp" width="100%" height="150"></iframe>
        <iframe src="conversa.jsp" width="100%" height="400"></iframe>
        <iframe src="mensagem.jsp" width="100%" height="150"></iframe>

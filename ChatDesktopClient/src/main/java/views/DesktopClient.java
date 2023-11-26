@@ -4,19 +4,30 @@
  */
 package views;
 
+import java.awt.Image;
+import java.io.IOException;
 import static java.lang.System.out;
+import java.net.DatagramPacket;
+import java.net.InetAddress;
+import java.net.MulticastSocket;
 import java.rmi.Naming;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import middleware.EmojiUtils;
 import middleware.Utils;
 import middleware.RmiInterfaceDesktop;
 import middleware.RmiInterfaceWeb;
+import middleware.UdpClient;
+import middleware.UdpServer;
 
 /**
  *
  * @author patri
  */
 public class DesktopClient extends javax.swing.JFrame {
+
+    private JLabel backgroundLabel;
 
     /**
      * Creates new form DesktopClient
@@ -41,7 +52,29 @@ public class DesktopClient extends javax.swing.JFrame {
                 }
             }
         };
-
+        
+        Thread updateAds = new Thread(){
+            String imageName = "";
+            @Override
+            public void run() {
+            while (true) {
+                try {
+                    MulticastSocket socketMulticast = new MulticastSocket(3333);
+                    InetAddress grupo = InetAddress.getByName("239.0.0.1");
+                    socketMulticast.joinGroup(grupo);
+                    byte[] msg = new byte[256];
+                    DatagramPacket datagrama = new DatagramPacket(msg, msg.length);
+                    socketMulticast.receive(datagrama);
+                    imageName = new String(datagrama.getData()).trim();
+                    System.out.println(imageName);
+                    adArea.setIcon(new ImageIcon(imageName));
+                } catch (IOException e) {
+                    JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage());
+                }
+            } 
+            }
+        };
+        updateAds.start();
         updateConversation.start();
     }
 
@@ -59,6 +92,8 @@ public class DesktopClient extends javax.swing.JFrame {
         btnSendMessage = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         edtConversation = new javax.swing.JEditorPane();
+        jPanel1 = new javax.swing.JPanel();
+        adArea = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -81,33 +116,55 @@ public class DesktopClient extends javax.swing.JFrame {
         edtConversation.setContentType("text/html"); // NOI18N
         jScrollPane1.setViewportView(edtConversation);
 
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(adArea, javax.swing.GroupLayout.DEFAULT_SIZE, 288, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(adArea, javax.swing.GroupLayout.PREFERRED_SIZE, 504, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(33, 33, 33)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane1)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 547, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(29, 29, 29)
-                        .addComponent(btnSendMessage)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnSendMessage)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                            .addComponent(lblMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(txtMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 478, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 580, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 483, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblMessage)
-                    .addComponent(txtMessage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnSendMessage))
-                .addGap(36, 36, 36))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 502, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblMessage)
+                            .addComponent(txtMessage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(8, 8, 8)
+                        .addComponent(btnSendMessage)
+                        .addContainerGap())))
         );
 
         pack();
@@ -120,14 +177,14 @@ public class DesktopClient extends javax.swing.JFrame {
     private void btnSendMessageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSendMessageActionPerformed
         try {
             RmiInterfaceDesktop objRmiDesktop = (RmiInterfaceDesktop) Naming.lookup("rmi://localhost:7777/ChatServerDesktop");
-            RmiInterfaceWeb objRmiWeb =  (RmiInterfaceWeb) Naming.lookup("rmi://localhost:6666/ChatServerWeb");
-            
+            RmiInterfaceWeb objRmiWeb = (RmiInterfaceWeb) Naming.lookup("rmi://localhost:6666/ChatServerWeb");
+
             String msgDesktop = "<font color=\"" + Utils.getColor() + "\">" + Utils.getNickname() + "</font> says: " + txtMessage.getText() + "<br>";
             String msgWeb = "<img src=\"imagens/default_avatar.png\" width=\"30\" height=\"30\"><font color=\"" + Utils.getColor() + "\">" + Utils.getNickname() + "</font> says: " + EmojiUtils.transformToEmoji(txtMessage.getText()) + "<br>";
-            
+
             objRmiDesktop.storeMsg(msgDesktop);
             objRmiWeb.storeMsg(msgWeb);
-            
+
         } catch (Exception e) {
             System.out.print(e.getMessage());
             JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
@@ -172,8 +229,10 @@ public class DesktopClient extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel adArea;
     private javax.swing.JButton btnSendMessage;
     private javax.swing.JEditorPane edtConversation;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblMessage;
     private javax.swing.JTextField txtMessage;
